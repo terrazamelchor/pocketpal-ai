@@ -380,6 +380,48 @@ export class TTSStore {
   }
 
   /**
+   * Simplified speak method for notification narration.
+   * Uses system TTS engine directly without requiring voice setup.
+   */
+  async speak(text: string): Promise<void> {
+    if (!this.isTTSAvailable) {
+      return;
+    }
+
+    await this.stop();
+
+    // Use system engine for simple speech
+    const systemVoice: Voice = {
+      id: 'system.default',
+      name: 'System Voice',
+      engine: 'system',
+      languages: [],
+    };
+
+    const messageId = `speak:${Date.now()}`;
+    
+    runInAction(() => {
+      this.playbackState = {mode: 'playing', messageId};
+    });
+
+    try {
+      const engine = getEngine('system');
+      await engine.play(text, systemVoice);
+    } catch (err) {
+      console.warn('[TTSStore] speak failed:', err);
+    } finally {
+      runInAction(() => {
+        if (
+          this.playbackState.mode === 'playing' &&
+          this.playbackState.messageId === messageId
+        ) {
+          this.playbackState = {mode: 'idle'};
+        }
+      });
+    }
+  }
+
+  /**
    * Audition path — speak `TTS_PREVIEW_SAMPLE` with `voice` and route
    * through the store so it interacts cleanly with any in-flight stream
    * or replay (no overlapping audio, no engine-swap races).

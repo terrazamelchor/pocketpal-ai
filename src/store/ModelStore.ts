@@ -3012,6 +3012,75 @@ class ModelStore {
   };
 
   /**
+   * Simple method to generate a response from the model.
+   * Used for notification narration and other simple completions.
+   * @param systemPrompt - System prompt to set the context
+   * @param userMessage - User message/prompt
+   * @returns Promise with the generated text
+   */
+  generateResponse = async (
+    systemPrompt: string,
+    userMessage: string,
+  ): Promise<{text: string}> => {
+    if (!this.context) {
+      throw new Error('No model context available. Please load a model first.');
+    }
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        let fullText = '';
+
+        // Use the existing completion mechanism
+        const completionParams =
+          await chatSessionRepository.getGlobalCompletionSettings();
+        const stopWords = toJS(this.activeModel?.stopWords);
+
+        const messages = [
+          {
+            role: 'system',
+            content: systemPrompt,
+          },
+          {
+            role: 'user',
+            content: userMessage,
+          },
+        ];
+
+        const completionParamsWithAppProps = {
+          ...completionParams,
+          messages: messages,
+          stop: stopWords,
+        } as CompletionParams;
+
+        const cleanCompletionParams = toApiCompletionParams(
+          completionParamsWithAppProps,
+        );
+
+        const completionPromise = this.context!.completion(
+          cleanCompletionParams,
+          data => {
+            if (data.token) {
+              fullText += data.token;
+            }
+          },
+        );
+
+        this.registerCompletionPromise(completionPromise);
+
+        await completionPromise;
+
+        this.clearCompletionPromise();
+
+        resolve({text: fullText});
+      } catch (error) {
+        this.clearCompletionPromise();
+        console.error('Error in generateResponse:', error);
+        reject(error);
+      }
+    });
+  };
+
+  /**
    * Fetches and updates model file details from HuggingFace.
    * This is used when we need to get the lfs.oid for integrity checks.
    * @param model - The model to update
