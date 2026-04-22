@@ -1,96 +1,65 @@
-# OSX
-#
-.DS_Store
-
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-**/.xcode.env.local
-ios/dist
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-local.properties
-*.iml
-*.hprof
-.cxx/
-*.keystore
-!debug.keystore
-.kotlin/
-
-# node.js
-#
+```
+# Dependencies
 node_modules/
-npm-debug.log
-yarn-error.log
-package-lock.json
-.yarn
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
+# Build outputs
+android/app/build/
+android/.gradle/
+build/
+dist/
+target/
 
-**/fastlane/report.xml
-**/fastlane/Preview.html
-**/fastlane/screenshots
-**/fastlane/test_output
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
 
-# Bundle artifact
-*.jsbundle
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Ruby / CocoaPods
-**/Pods/
-/vendor/bundle/
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Temporary files created by Metro to check the health of the file watcher
-.metro-health-check*
-
-# testing
-/coverage
+# Environment variables
 .env
-
-# Firebase config files
-android/app/google-services.json
-ios/GoogleService-Info.plist
-
-# Environment files
-.env
+.env.local
 .env.*
-!.env.example
 
-# environment config
-ios/Config/Env.xcconfig
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Android native libraries (should not be committed)
-**/libggml-htp*.so
+# Testing
+coverage/
+htmlcov/
+.coverage
 
-# E2E debug output
-e2e/debug-output/
-e2e/device-farm-artifacts/
-e2e/test-package.zip
-e2e/testspec-*-allmodels.yml
+# Mobile
+*.apk
+*.aab
+*.ipa
 
-# E2E pipeline
-e2e/devices.json
-e2e/reports/
+# Temporary files
+*.tmp
+*.temp
+```

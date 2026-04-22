@@ -11,7 +11,6 @@ import {
 import {PalSheet} from '../../components/PalsSheets';
 
 import {useChatSession} from '../../hooks';
-import {usePendingMessage} from '../../hooks/useDeepLinking';
 import {Pal} from '../../types/pal';
 
 import {modelStore, chatSessionStore, palStore, uiStore} from '../../store';
@@ -66,9 +65,6 @@ export const ChatScreen: React.FC = observer(() => {
 
   const {handleSendPress, handleStopPress, isMultimodalEnabled} =
     useChatSession(currentMessageInfo, user, assistant);
-
-  // Handle deep linking for message prefill
-  const {pendingMessage, clearPendingMessage} = usePendingMessage();
 
   // Callback handler for opening pal sheet
   const handleOpenPalSheet = React.useCallback((_pal: Pal) => {
@@ -179,8 +175,6 @@ export const ChatScreen: React.FC = observer(() => {
         sendButtonVisibilityMode="always"
         showImageUpload={true}
         isVisionEnabled={multimodalEnabled}
-        initialInputText={pendingMessage || undefined}
-        onInitialTextConsumed={clearPendingMessage}
         inputProps={{
           showThinkingToggle: thinkingSupported,
           isThinkingEnabled: thinkingEnabled,
