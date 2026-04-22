@@ -15,7 +15,6 @@ import {
 
 import {ttsStore, uiStore} from './src/store';
 import {useTheme} from './src/hooks';
-import {useDeepLinking} from './src/hooks/useDeepLinking';
 import {Theme} from './src/utils/types';
 
 import {l10n, initLocale} from './src/locales';
@@ -25,23 +24,11 @@ import {ROUTES} from './src/utils/navigationConstants';
 import {
   SidebarContent,
   ModelsHeaderRight,
-  PalHeaderRight,
   HeaderLeft,
   AppWithMigration,
   MemorySnapshotTrigger,
-  TTSSetupSheet,
 } from './src/components';
-import {
-  ChatScreen,
-  ModelsScreen,
-  SettingsScreen,
-  BenchmarkScreen,
-  AboutScreen,
-
-  // Dev tools screen. Only available in debug mode.
-  DevToolsScreen,
-} from './src/screens';
-import PalsScreen from './src/screens/PalsScreen';
+import {ChatScreen, ModelsScreen, NotificationsScreen} from './src/screens';
 
 // Check if app is in debug mode
 const isDebugMode = __DEV__;
@@ -49,12 +36,6 @@ const isDebugMode = __DEV__;
 const Drawer = createDrawerNavigator();
 
 const screenWidth = Dimensions.get('window').width;
-
-// Component that handles deep linking - must be inside NavigationContainer
-const DeepLinkHandler = () => {
-  useDeepLinking();
-  return null;
-};
 
 const App = observer(() => {
   const theme = useTheme();
@@ -82,7 +63,6 @@ const App = observer(() => {
           <PaperProvider theme={theme}>
             <L10nContext.Provider value={currentL10n}>
               <NavigationContainer>
-                <DeepLinkHandler />
                 <BottomSheetModalProvider>
                   <Drawer.Navigator
                     screenOptions={{
@@ -98,19 +78,17 @@ const App = observer(() => {
                     }}
                     drawerContent={props => <SidebarContent {...props} />}>
                     <Drawer.Screen
-                      name={ROUTES.CHAT}
-                      component={gestureHandlerRootHOC(ChatScreen)}
+                      name={ROUTES.NOTIFICATIONS}
+                      component={gestureHandlerRootHOC(NotificationsScreen)}
                       options={{
                         headerShown: false,
                       }}
                     />
                     <Drawer.Screen
-                      name={ROUTES.PALS}
-                      component={gestureHandlerRootHOC(PalsScreen)}
+                      name={ROUTES.CHAT}
+                      component={gestureHandlerRootHOC(ChatScreen)}
                       options={{
-                        headerRight: () => <PalHeaderRight />,
-                        headerStyle: styles.headerWithoutDivider,
-                        title: currentL10n.screenTitles.pals,
+                        headerShown: false,
                       }}
                     />
                     <Drawer.Screen
@@ -122,44 +100,7 @@ const App = observer(() => {
                         title: currentL10n.screenTitles.models,
                       }}
                     />
-                    <Drawer.Screen
-                      name={ROUTES.BENCHMARK}
-                      component={gestureHandlerRootHOC(BenchmarkScreen)}
-                      options={{
-                        headerStyle: styles.headerWithoutDivider,
-                        title: currentL10n.screenTitles.benchmark,
-                      }}
-                    />
-                    <Drawer.Screen
-                      name={ROUTES.SETTINGS}
-                      component={gestureHandlerRootHOC(SettingsScreen)}
-                      options={{
-                        headerStyle: styles.headerWithoutDivider,
-                        title: currentL10n.screenTitles.settings,
-                      }}
-                    />
-                    <Drawer.Screen
-                      name={ROUTES.APP_INFO}
-                      component={gestureHandlerRootHOC(AboutScreen)}
-                      options={{
-                        headerStyle: styles.headerWithoutDivider,
-                        title: currentL10n.screenTitles.appInfo,
-                      }}
-                    />
-
-                    {/* Only show Dev Tools screen in debug mode */}
-                    {isDebugMode && (
-                      <Drawer.Screen
-                        name={ROUTES.DEV_TOOLS}
-                        component={gestureHandlerRootHOC(DevToolsScreen)}
-                        options={{
-                          headerStyle: styles.headerWithoutDivider,
-                          title: 'Dev Tools',
-                        }}
-                      />
-                    )}
                   </Drawer.Navigator>
-                  <TTSSetupSheet />
                 </BottomSheetModalProvider>
               </NavigationContainer>
             </L10nContext.Provider>
